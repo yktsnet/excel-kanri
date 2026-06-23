@@ -1,56 +1,22 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-venv/
-.venv/
-env/
-.env
-.env.*
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Node / Frontend
-node_modules/
-dist/
-dist-ssr/
-*.local
-
-# SQLite Database
-*.db
-*.sqlite
-*.sqlite3
-*.db-journal
-*.db-shm
-*.db-wal
-
-# Excel / PDF Data (Ignore actual document files to prevent leaking personal/client data)
-*.xlsx
-*.xls
-*.pdf
-
-# IDEs and editors
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.swp
-*.swo
-
 # OS
 .DS_Store
 Thumbs.db
+
+# Environment variables & secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node / Vite
+node_modules/
+dist/
+
+# SQLite Databases
+*.db
+*.sqlite
+*.sqlite3
