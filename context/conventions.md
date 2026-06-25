@@ -11,6 +11,12 @@
 - コンポーネントは `src/components/` 配下に配置。
 - API クライアントは `src/api/` にまとめる。
 
+## Tailwind CSS / shadcn/ui
+- shadcn/ui のコンポーネントは `src/components/ui/` 配下に配置（CLIデフォルト）。
+- カスタムコンポーネントは `src/components/` 直下に配置。
+- Tailwind クラスはJSX上に直接記述する。スタイル用の別ファイルは作らない。
+- `cn()` ユーティリティは `src/lib/utils.ts` に起く（shadcn/ui の標準構成）。
+
 ## 命名
 - Python: snake_case（変数・関数）、PascalCase（クラス）
 - TypeScript: camelCase（変数・関数）、PascalCase（コンポーネント・型）

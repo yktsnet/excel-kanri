@@ -41,14 +41,15 @@
 
 | レイヤー | 技術 |
 |---|---|
-| Web入力・閲覧・検索 | React (Vite) フロントエンド |
+| Web入力・閲覧・検索 | React + Vite（Tailwind CSS + shadcn/ui） |
 | バックエンドAPI | Python FastAPI |
 | Excel生成 | `openpyxl`（テンプレート流し込み） |
 | セルマッピング定義 | YAML（書類種別ごとのフィールド→セル対応） |
-| PDF変換 | LibreOffice headless |
-| ファイル監視 | Python `watchdog`（ルートB：共有フォルダの変更検知） |
+| PDF変換 | Gotenberg（Dockerコンテナ） |
+| ファイル監視 | Python `watchdog`（ルートB） |
 | データ記録・全文検索 | SQLite + FTS5 |
 | 自然言語検索 | Gemini API + Text-to-SQL |
+| 認証 | JWT（passlib + python-jose） |
 | ファイル共有（本番） | Samba（本番インフラ設定。開発時はWSL2で代替） |
 | インフラ | Linux（オンプレ/VPS） |
 
