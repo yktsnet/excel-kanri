@@ -4,7 +4,11 @@ Thumbs.db
 
 # Environment variables & secrets
 .env
-.env.*
+.env.local
+.env.*.local
+
+# Claude local overrides (settings.json はチェックイン対象、local.json は個人用)
+.claude/settings.local.json
 
 # Python
 __pycache__/
@@ -21,5 +25,3 @@ dist/
 *.sqlite
 *.sqlite3
 
-PLAN.md
-JUDGE.md
