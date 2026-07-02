@@ -5,7 +5,7 @@
 
 ### セットアップ
 ```
-pip install -r requirements.txt
+nix-shell   # Python 仮想環境（.venv）に requirements.txt を自動インストール
 npm install
 ```
 
