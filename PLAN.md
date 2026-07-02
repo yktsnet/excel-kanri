@@ -2,6 +2,8 @@
 
 本ドキュメントは「システム1：書類作成自動化 ＋ 資料検索Webアプリ」の開発計画・ロードマップである。
 
+**進捗メモ（2026-07-02）**: フェーズ0のうち 0.1/0.3/0.4 をブートストラップ実装済み（バックエンド `app/`、フロントエンド `frontend/`）。動作確認済み・PR未作成。詳細は各項目のチェック状態を参照。安定次第、以降はIssueドリブンで進める。
+
 ---
 
 ## 設計方針
@@ -34,18 +36,19 @@ Web UIで書類種別・必要項目を入力する。バックエンドがSQLit
 
 全機能の前提となるログイン・権限管理の基盤を構築する。
 
-* [ ] **0.1 ユーザーモデルと認証 API**
-  * SQLiteに `users` テーブルを追加（`id`, `email`, `hashed_password`, `role`）。
-  * `POST /api/auth/login`: メール＋パスワードで認証しJWTを返す。
-  * `GET /api/auth/me`: 現在ユーザー情報を返すエンドポイント。
+* [x] **0.1 ユーザーモデルと認証 API**
+  * SQLiteに `users` テーブルを追加（`id`, `email`, `hashed_password`, `role`）。→ `app/db.py`
+  * `POST /api/auth/login`: メール＋パスワードで認証しJWTを返す。→ `app/api/auth.py`
+  * `GET /api/auth/me`: 現在ユーザー情報を返すエンドポイント。→ `app/api/auth.py`
 * [ ] **0.2 ロールベースアクセス制御**
   * `viewer`: 閲覧・検索系エンドポイントのみ利用可能。
   * `editor`: viewerの全構限 ＋ `POST /api/generate`を利用可能。
-* [ ] **0.3 ログインUI**
-  * shadcn/uiのFormを使用したメール＋パスワード入力画面。
-  * `DEMO_MODE=true`時: `viewer` / `editor` タブを表示しデモ認証情報を自動入力する。
-* [ ] **0.4 シードデータ**
-  * `DEMO_MODE=true`時に投入するデモ用ユーザー・書類データを用意する。
+  * `app/deps.py` に `require_role()` は実装済みだが、対象となる editor 限定エンドポイント（`POST /api/generate` 等）がフェーズ1未着手のため未使用。フェーズ1実装時に適用する。
+* [x] **0.3 ログインUI**
+  * ~~shadcn/uiのFormを使用~~ → 現状は Tailwind 手書きの `LoginForm.tsx`（shadcn/ui未導入）。`frontend/src/components/LoginForm.tsx`
+  * `DEMO_MODE=true`時: `viewer` / `editor` タブを表示しデモ認証情報を自動入力する。→ 実装・動作確認済み。
+* [x] **0.4 シードデータ**
+  * `DEMO_MODE=true`時に投入するデモ用ユーザー（viewer/editor各1件）を用意。→ `app/seed.py`。書類データのシードは未着手（フェーズ1以降で追加）。
 
 ### フェーズ 1: ① 自動生成
 
@@ -57,7 +60,7 @@ Web UIからの入力を起点に書類（Excel + PDF）を自動生成するパ
 * [ ] **1.2 生成API**
   * `POST /api/generate`: フォームデータを受け取り、SQLiteに記録後、`.xlsx` + `.pdf` を `generated/` に保存する。
   * `openpyxl` でテンプレートExcelに値を流し込み `.xlsx` を生成する。
-  * LibreOffice headless で `.pdf` に変換する。
+  * Gotenberg コンテナへのHTTPリクエストで `.pdf` に変換する（CLAUDE.md参照。LibreOffice headlessサブプロセス管理は不要）。
 * [ ] **1.3 書類入力UI**
   * 書類種別の選択メニュー（例：入居申し込み・退去手続き）。
   * 種別ごとの入力フォーム（氏名・部屋番号・入居日等）。
@@ -77,7 +80,7 @@ Web UIからの入力を起点に書類（Excel + PDF）を自動生成するパ
   * ブラウザ印刷への導線。
 * [ ] **2.4 共有フォルダ監視（ルートB）**
   * `watchdog` による `shared/` 配下の `.xlsx` 変更検知（`IN_CLOSE_WRITE` イベント）。
-  * LibreOffice headless で `.pdf` を自動更新（同名上書き）。
+  * Gotenberg で `.pdf` を自動更新（同名上書き）。
 
 ### フェーズ 3: ③ 検索
 
