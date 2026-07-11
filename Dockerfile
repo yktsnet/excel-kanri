@@ -10,7 +10,7 @@ COPY frontend/ frontend/
 RUN npm run build
 
 # --- backend runtime stage ---
-FROM python:3.13-slim AS backend
+FROM python:3.14-slim AS backend
 WORKDIR /app
 
 COPY requirements.txt ./
