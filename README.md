@@ -1,8 +1,12 @@
+[🇯🇵 日本語](README.md) | [🇬🇧 English](README.en.md)
+
 # excel-kanri
 
 [![CI](https://github.com/yktsnet/excel-kanri/actions/workflows/ci.yml/badge.svg)](https://github.com/yktsnet/excel-kanri/actions/workflows/ci.yml)
 
 既存の Excel 帳票運用を壊さずに、Web フォームからの書類生成・共有フォルダの PDF 自動変換・全文検索を後付けする、clone して使うツールキット（汎用モジュール群 + FastAPI/React リファレンス実装）。
+
+![app demo: ログイン → 書類生成 → PDF プレビュー → 検索](docs/app-demo.gif)
 
 ## Quick Start
 

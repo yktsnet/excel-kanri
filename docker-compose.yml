@@ -6,6 +6,7 @@ services:
     environment:
       DEMO_MODE: "true"
       GOTENBERG_URL: http://gotenberg:3000
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-secret-change-me}
     volumes:
       - ./generated:/app/generated
       - ./shared:/app/shared

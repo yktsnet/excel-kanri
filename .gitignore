@@ -27,6 +27,7 @@ tsconfig.tsbuildinfo
 # 生成物・共有フォルダ（実行時に作られる）
 generated/
 shared/
+docs/video/
 
 # SQLite Databases
 *.db
