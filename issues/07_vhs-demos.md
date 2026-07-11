@@ -1,8 +1,8 @@
 ## packages の VHS デモ作り直し（示したいこと駆動の構成に）
 id: 07
 branch-slug: vhs-demos
-github_issue:
-status: open
+github_issue: 28
+status: close
 type: fix
 対象: packages/template_fill/demo.tape / packages/watch_convert/demo.tape / packages/template_fill/demo.gif / packages/watch_convert/demo.gif / packages/template_fill/demo/mapping.yaml / packages/template_fill/demo/data.json
 内容: 現行の GIF はコマンドを順に打っているだけで、モジュールが何を解決するかが映像として読めない。各 GIF に「示したいこと」を1文で固定し、before/after の対比で見せる構成に作り直す。watch_convert のデモが app/ に依存している矛盾も解消する。
