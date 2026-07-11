@@ -1,8 +1,8 @@
 ## editor UI のレイアウト再設計（生成フォームのモーダル化 + 生成後の一覧自動更新）
 id: 05
 branch-slug: editor-layout
-github_issue:
-status: open
+github_issue: 24
+status: close
 type: fix
 対象: frontend/src/App.tsx / frontend/src/components/DocumentForm.tsx / frontend/src/components/FileList.tsx / frontend/src/components/GenerateModal.tsx (新規)
 内容: editor ログイン時に縦長の生成フォームが上段に常時展開され、主役であるべき一覧+プレビューが残り高さに圧縮される問題を解消する。生成フォームはモーダルに移し、生成成功後は一覧を自動更新して生成物をプレビューに表示する。
