@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     gotenberg_url: str = "http://localhost:3000"
     mapping_dir: str = "examples/mansion/mapping"
     generated_dir: str = "generated"
+    shared_dir: str = "shared"
 
 
 settings = Settings()

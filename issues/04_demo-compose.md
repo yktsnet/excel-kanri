@@ -4,8 +4,8 @@ branch-slug: demo-compose
 github_issue:
 status: open
 type: feat
-対象: docker-compose.yml (新規), Dockerfile (新規), app/seed.py, examples/mansion/seed/documents.json (新規), .env.example
-内容: MVP完成条件「docker compose up 一発で DEMO_MODE が立ち上がる」と、空一覧・空検索を防ぐデモ用書類シード
+対象: docker-compose.yml (新規), Dockerfile (新規), app/seed.py, examples/mansion/seed/documents.json (新規), .env.example, packages/template_fill/demo.tape, packages/watch_convert/demo.tape
+内容: MVP完成条件「docker compose up 一発で DEMO_MODE が立ち上がる」と、空一覧・空検索を防ぐデモ用書類シード、VHS デモの録り直し
 確認: docker compose up でログイン→生成→一覧→検索が到達できること（手動）
 
 ---
@@ -17,6 +17,15 @@ type: feat
 3. `Dockerfile`（新規）: multi-stage。node で `npm run build` → python イメージに `frontend/dist` + app/ packages/ examples/ を載せ uvicorn 起動
 4. `docker-compose.yml`（新規）: `app`（8000 公開、`DEMO_MODE=true`、generated/ shared/ を volume）+ `gotenberg`（gotenberg/gotenberg:8）。GOTENBERG_URL で `http://gotenberg:3000` を注入
 5. `.env.example` を compose 変数と揃える
+
+### VHS デモの録り直し
+
+現行の demo.gif は実行の事実しか映っておらず、初見者に結果が伝わらない。Gotenberg が立つ本 Issue で以下の方針に録り直す:
+
+6. 両 tape 共通: 冒頭に `Type "# これから何を見せるかの1行コメント"` を打ってから本編に入る
+7. `packages/template_fill/demo.tape`: 生成実行の後に、生成された xlsx のセル値を読み出して表示する一手を足す（例: openpyxl で `B3=山田 太郎, D5=101` を print する Python ワンライナー）。「テンプレに値が入った」という結果を画面に出す
+8. `packages/watch_convert/demo.tape`: `--exec` を echo ではなく Gotenberg 実変換（`app/gotenberg.py` を叩く Python ワンライナー等）にし、投入前後の `ls shared/` で「xlsx を置いたら .pdf が現れる」を映す。compose の gotenberg コンテナ起動を tape の前提とし、その旨を tape コメントに書く
+9. GIF を再生成してコミットする（`vhs packages/<mod>/demo.tape`）
 
 ### 制約
 
