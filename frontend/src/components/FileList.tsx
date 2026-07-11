@@ -6,6 +6,7 @@ interface FileListProps {
   token: string;
   selectedPath: string | null;
   onSelect: (file: FileEntry) => void;
+  refreshSignal?: number;
 }
 
 const SOURCE_LABEL: Record<FileEntry["source"], string> = {
@@ -18,7 +19,7 @@ const SOURCE_BADGE_CLASS: Record<FileEntry["source"], string> = {
   shared: "bg-amber-100 text-amber-800",
 };
 
-export default function FileList({ token, selectedPath, onSelect }: FileListProps) {
+export default function FileList({ token, selectedPath, onSelect, refreshSignal }: FileListProps) {
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +27,7 @@ export default function FileList({ token, selectedPath, onSelect }: FileListProp
     fetchFiles(token)
       .then(setFiles)
       .catch((err) => setError(err instanceof Error ? err.message : "一覧の取得に失敗しました"));
-  }, [token]);
+  }, [token, refreshSignal]);
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">

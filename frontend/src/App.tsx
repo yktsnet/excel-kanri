@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
-import DocumentForm from "./components/DocumentForm";
+import GenerateModal from "./components/GenerateModal";
 import FileList from "./components/FileList";
 import PdfPreview from "./components/PdfPreview";
 import SearchBar from "./components/SearchBar";
 import { CurrentUser, fetchCurrentUser } from "./api/auth";
 import { FileEntry } from "./api/files";
+import { GenerateResult } from "./api/documents";
 
 const TOKEN_STORAGE_KEY = "excel-kanri.token";
 
@@ -15,6 +16,8 @@ export default function App() {
   );
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileEntry | null>(null);
+  const [isGenerateModalOpen, setGenerateModalOpen] = useState(false);
+  const [refreshSignal, setRefreshSignal] = useState(0);
 
   useEffect(() => {
     if (!token) {
@@ -39,6 +42,21 @@ export default function App() {
     setToken(null);
   }
 
+  function handleGenerated(result: GenerateResult) {
+    setGenerateModalOpen(false);
+    setRefreshSignal((n) => n + 1);
+    if (result.pdf_path) {
+      const path = result.pdf_path;
+      const name = path.split("/").pop() ?? path;
+      setSelectedFile({
+        name,
+        source: "generated",
+        path,
+        updated_at: new Date().toISOString(),
+      });
+    }
+  }
+
   if (!token || !user) {
     return <LoginForm onLoggedIn={handleLoggedIn} />;
   }
@@ -57,21 +75,37 @@ export default function App() {
         </button>
       </div>
 
-      {user.role === "editor" && (
-        <div className="mt-8 flex justify-center">
-          <DocumentForm token={token} />
-        </div>
-      )}
-
       <div className="mt-8 grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6">
         <div className="flex min-h-0 flex-col gap-3">
+          {user.role === "editor" && (
+            <button
+              type="button"
+              onClick={() => setGenerateModalOpen(true)}
+              className="w-full rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+            >
+              新規作成
+            </button>
+          )}
           <SearchBar token={token} onSelect={setSelectedFile} />
           <div className="min-h-0 flex-1">
-            <FileList token={token} selectedPath={selectedFile?.path ?? null} onSelect={setSelectedFile} />
+            <FileList
+              token={token}
+              selectedPath={selectedFile?.path ?? null}
+              onSelect={setSelectedFile}
+              refreshSignal={refreshSignal}
+            />
           </div>
         </div>
         <PdfPreview file={selectedFile} token={token} />
       </div>
+
+      {isGenerateModalOpen && user.role === "editor" && (
+        <GenerateModal
+          token={token}
+          onClose={() => setGenerateModalOpen(false)}
+          onGenerated={handleGenerated}
+        />
+      )}
     </div>
   );
 }
