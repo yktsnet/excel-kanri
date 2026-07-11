@@ -1,8 +1,8 @@
 ## 機能② 閲覧一式（一覧・PDF配信API + プレビューUI + shared/ 監視）
 id: 02
 branch-slug: viewer
-github_issue:
-status: open
+github_issue: 4
+status: close
 type: feat
 対象: app/api/files.py (新規), app/api/pdf.py (新規), app/watcher.py (新規), app/main.py, app/config.py, frontend/src/components/FileList.tsx (新規), frontend/src/components/PdfPreview.tsx (新規), frontend/src/api/files.ts (新規), frontend/src/App.tsx
 内容: ルートA/B の閲覧を end-to-end で動かす縦切り。ファイル一覧 → PDF プレビュー → 印刷、および watch_convert の app 組み込み（shared/ → PDF 自動更新）
