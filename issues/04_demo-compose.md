@@ -1,8 +1,8 @@
 ## DEMO_MODE 書類シード + docker compose 一発起動
 id: 04
 branch-slug: demo-compose
-github_issue:
-status: open
+github_issue: 8
+status: close
 type: feat
 対象: docker-compose.yml (新規), Dockerfile (新規), app/seed.py, examples/mansion/seed/documents.json (新規), .env.example, packages/template_fill/demo.tape, packages/watch_convert/demo.tape
 内容: MVP完成条件「docker compose up 一発で DEMO_MODE が立ち上がる」と、空一覧・空検索を防ぐデモ用書類シード、VHS デモの録り直し
