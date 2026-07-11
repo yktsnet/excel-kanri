@@ -1,8 +1,8 @@
 ## 機能① 書類生成一式（API + 入力UI + Gotenberg連携）
 id: 01
 branch-slug: generate
-github_issue:
-status: open
+github_issue: 2
+status: close
 type: feat
 対象: app/api/generate.py (新規), app/gotenberg.py (新規), app/db.py, app/config.py, app/main.py, requirements.txt, .env.example, frontend/src/components/DocumentForm.tsx (新規), frontend/src/api/documents.ts (新規), frontend/src/App.tsx
 内容: ルートAを end-to-end で動かす縦切り。Web フォーム入力 → SQLite 記録 → packages.template_fill で xlsx → Gotenberg で pdf → generated/ 保存まで
