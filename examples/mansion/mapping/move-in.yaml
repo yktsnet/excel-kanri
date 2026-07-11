@@ -1,0 +1,8 @@
+# 入居申込書のフィールド → セル対応
+template: ../templates/move-in.xlsx
+fields:
+  applicant_name: B3
+  room_number: B5
+  move_in_date: B7
+  phone: B9
+  emergency_contact: B11

@@ -20,6 +20,10 @@ venv/
 node_modules/
 dist/
 
+# 生成物・共有フォルダ（実行時に作られる）
+generated/
+shared/
+
 # SQLite Databases
 *.db
 *.sqlite

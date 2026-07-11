@@ -1,0 +1,7 @@
+# 退去届のフィールド → セル対応
+template: ../templates/move-out.xlsx
+fields:
+  resident_name: B3
+  room_number: B5
+  move_out_date: B7
+  forwarding_address: B9
