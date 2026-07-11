@@ -47,3 +47,10 @@ def init_db() -> None:
             )
             """
         )
+        conn.execute(
+            """
+            CREATE VIRTUAL TABLE IF NOT EXISTS documents_fts USING fts5(
+                doc_type, content, doc_id UNINDEXED
+            )
+            """
+        )

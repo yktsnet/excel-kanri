@@ -10,6 +10,7 @@ from app.api.auth import router as auth_router
 from app.api.files import router as files_router
 from app.api.generate import router as generate_router
 from app.api.pdf import router as pdf_router
+from app.api.search import router as search_router
 from app.config import settings
 from app.db import init_db
 from app.seed import seed_demo_data
@@ -39,6 +40,7 @@ app.include_router(auth_router)
 app.include_router(generate_router)
 app.include_router(files_router)
 app.include_router(pdf_router)
+app.include_router(search_router)
 
 
 @app.get("/api/health")

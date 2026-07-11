@@ -9,6 +9,7 @@ from app.config import settings
 from app.db import db_session
 from app.deps import get_current_user, require_role
 from app.gotenberg import GotenbergError, convert_to_pdf
+from app.indexer import index_document
 from app.models import User
 from packages.template_fill import FillError, MappingError, fill_template, load_mapping
 
@@ -104,6 +105,8 @@ def generate_document(
             "UPDATE documents SET xlsx_path = ?, pdf_path = ? WHERE id = ?",
             (str(xlsx_path), None if convert_error else str(pdf_path), doc_id),
         )
+        if not convert_error:
+            index_document(conn, doc_id, request.doc_type, json.dumps(request.fields, ensure_ascii=False))
 
     if convert_error:
         raise HTTPException(
