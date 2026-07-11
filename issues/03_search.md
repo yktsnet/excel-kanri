@@ -1,8 +1,8 @@
 ## 機能③ FTS5 全文検索一式（API + UI）
 id: 03
 branch-slug: search
-github_issue:
-status: open
+github_issue: 6
+status: close
 type: feat
 対象: app/indexer.py (新規), app/api/search.py (新規), app/api/generate.py, app/db.py, app/main.py, frontend/src/components/SearchBar.tsx (新規), frontend/src/api/search.ts (新規), frontend/src/App.tsx
 内容: ルートAの生成書類を氏名・部屋番号等のキーワードで検索し、プレビューへ飛ぶ縦切り
