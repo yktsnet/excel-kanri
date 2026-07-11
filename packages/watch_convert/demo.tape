@@ -1,8 +1,10 @@
 # VHS demo: watch_convert
 # 生成: リポルートで nix-shell に入り `vhs packages/watch_convert/demo.tape`
-# 前提: .venv に requirements.txt がインストール済み。
-#       Gotenberg コンテナが起動していること（例: docker compose up -d gotenberg）。
-#       GOTENBERG_URL 未設定時は既定の http://localhost:3000 に接続する。
+# 前提: .venv に requirements.txt がインストール済み
+# 示したいこと: ディレクトリへの保存を検知し、連続保存はデバウンスで束ねて、
+#               静定後に1回だけ任意コマンドを実行する
+# 注: 実変換（Gotenberg呼び出し）はapp/側の仕事。このモジュールが担う
+#     検知とデバウンスだけを、自己完結のexecコマンドで示す。
 
 Output packages/watch_convert/demo.gif
 
@@ -12,29 +14,37 @@ Set Height 500
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 40ms
 
-Type "# xlsxをディレクトリに置くと、Gotenbergでの実変換によりpdfが自動生成される"
+Type "alias py=.venv/bin/python"
 Enter
-Sleep 1s
+Sleep 500ms
 
-Type "mkdir -p shared"
+Type "mkdir -p shared && rm -f shared/*.xlsx"
 Enter
-Sleep 1s
+Sleep 500ms
 
-Type "ls shared/"
+Type "# 監視開始（debounce=1秒）: 保存を検知したらexecコマンドを1回実行する"
+Enter
+Sleep 800ms
+
+Type "py -m packages.watch_convert shared --exec 'echo converted: {src}' --debounce 1 &"
 Enter
 Sleep 2s
 
-Type ".venv/bin/python -m packages.watch_convert shared --exec '.venv/bin/python -c \"import sys; from pathlib import Path; from app.gotenberg import convert_to_pdf; convert_to_pdf(Path(sys.argv[1]), Path(sys.argv[2]))\" {src} shared/report.pdf' --debounce 0.5 &"
+Type "# ファイルを1つ置く → 検知して1回実行される"
 Enter
-Sleep 2s
+Sleep 800ms
 
-Type "cp packages/template_fill/demo/template.xlsx shared/report.xlsx"
+Type "touch shared/report.xlsx"
 Enter
 Sleep 3s
 
-Type "ls shared/"
+Type "# 同じファイルを0.2秒間隔で3回連続保存 → 実行は1回だけ"
 Enter
-Sleep 2s
+Sleep 800ms
+
+Type "for i in 1 2 3; do touch shared/report.xlsx; sleep 0.2; done"
+Enter
+Sleep 3s
 
 Type "kill %1"
 Enter

@@ -2,5 +2,4 @@ template: template.xlsx
 fields:
   customer: B3
   item: B5
-  quantity: D5
   delivery_date: B7
