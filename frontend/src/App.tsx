@@ -3,6 +3,7 @@ import LoginForm from "./components/LoginForm";
 import DocumentForm from "./components/DocumentForm";
 import FileList from "./components/FileList";
 import PdfPreview from "./components/PdfPreview";
+import SearchBar from "./components/SearchBar";
 import { CurrentUser, fetchCurrentUser } from "./api/auth";
 import { FileEntry } from "./api/files";
 
@@ -63,7 +64,12 @@ export default function App() {
       )}
 
       <div className="mt-8 grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6">
-        <FileList token={token} selectedPath={selectedFile?.path ?? null} onSelect={setSelectedFile} />
+        <div className="flex min-h-0 flex-col gap-3">
+          <SearchBar token={token} onSelect={setSelectedFile} />
+          <div className="min-h-0 flex-1">
+            <FileList token={token} selectedPath={selectedFile?.path ?? null} onSelect={setSelectedFile} />
+          </div>
+        </div>
         <PdfPreview file={selectedFile} token={token} />
       </div>
     </div>
