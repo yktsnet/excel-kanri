@@ -1,8 +1,8 @@
 ## sv6 への CI 自動デプロイ（compose 型）
 id: 06
 branch-slug: deploy-sv6
-github_issue:
-status: open
+github_issue: 26
+status: close
 type: feat
 対象: .github/workflows/ci.yml / docker-compose.yml / .env.example
 内容: main マージ後に CI 通過 → sv6 へ自動デプロイする deploy job を追加する（~/dotfiles/docs-agents/cicd.md §3-1 の compose 型）。sv6 では他アプリとポートが衝突するため、compose の公開ポートを環境変数でパラメータ化する。
