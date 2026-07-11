@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
+import DocumentForm from "./components/DocumentForm";
 import { CurrentUser, fetchCurrentUser } from "./api/auth";
 
 const TOKEN_STORAGE_KEY = "excel-kanri.token";
@@ -50,6 +51,12 @@ export default function App() {
           ログアウト
         </button>
       </div>
+
+      {user.role === "editor" && (
+        <div className="mt-8 flex justify-center">
+          <DocumentForm token={token} />
+        </div>
+      )}
     </div>
   );
 }
