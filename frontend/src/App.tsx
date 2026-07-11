@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import LoginForm from "./components/LoginForm";
 import DocumentForm from "./components/DocumentForm";
+import FileList from "./components/FileList";
+import PdfPreview from "./components/PdfPreview";
 import { CurrentUser, fetchCurrentUser } from "./api/auth";
+import { FileEntry } from "./api/files";
 
 const TOKEN_STORAGE_KEY = "excel-kanri.token";
 
@@ -10,6 +13,7 @@ export default function App() {
     localStorage.getItem(TOKEN_STORAGE_KEY)
   );
   const [user, setUser] = useState<CurrentUser | null>(null);
+  const [selectedFile, setSelectedFile] = useState<FileEntry | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -39,7 +43,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="flex h-screen flex-col bg-slate-50 p-8">
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-600">
           {user.email}（{user.role === "editor" ? "編集者" : "閲覧者"}）としてログイン中
@@ -57,6 +61,11 @@ export default function App() {
           <DocumentForm token={token} />
         </div>
       )}
+
+      <div className="mt-8 grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6">
+        <FileList token={token} selectedPath={selectedFile?.path ?? null} onSelect={setSelectedFile} />
+        <PdfPreview file={selectedFile} token={token} />
+      </div>
     </div>
   );
 }
