@@ -3,7 +3,7 @@
 使用例:
     python -m packages.watch_convert shared/ --exec 'echo converted: {src}'
 
-`{src}` が変換対象ファイルの絶対パスに置換される。
+`{src}` が変換対象ファイルのパス（引数に渡した表記基準）に置換される。
 """
 
 import argparse
@@ -46,13 +46,21 @@ def main(argv: list[str] | None = None) -> int:
     suffixes = tuple(args.suffix) if args.suffix else (".xlsx",)
 
     def convert(path: Path) -> None:
+        # watchdog（macOS の FSEvents 等）は絶対パスでイベントを返すため、cwd 配下なら
+        # 相対に戻す（ログ・exec に実行環境のホームディレクトリを露出させない）
+        try:
+            path = path.relative_to(Path.cwd())
+        except ValueError:
+            pass
         cmd = [part.replace("{src}", str(path)) for part in shlex.split(args.command)]
         logging.info("実行: %s", shlex.join(cmd))
         subprocess.run(cmd, check=True)
 
     try:
+        # resolve() しない: 渡された表記のまま監視し {src} も同じ表記で置換する
+        # （絶対パス化するとログと exec に実行環境のホームディレクトリが露出する）
         with watching(
-            args.directory.resolve(),
+            args.directory,
             convert,
             suffixes=suffixes,
             debounce_seconds=args.debounce,
