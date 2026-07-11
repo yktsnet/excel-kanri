@@ -1,11 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
-import { DocumentType, fetchDocumentTypes, generateDocument } from "../api/documents";
+import { DocumentType, GenerateResult, fetchDocumentTypes, generateDocument } from "../api/documents";
 
 interface DocumentFormProps {
   token: string;
+  onGenerated?: (result: GenerateResult) => void;
 }
 
-export default function DocumentForm({ token }: DocumentFormProps) {
+export default function DocumentForm({ token, onGenerated }: DocumentFormProps) {
   const [types, setTypes] = useState<DocumentType[]>([]);
   const [docType, setDocType] = useState("");
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -50,6 +51,7 @@ export default function DocumentForm({ token }: DocumentFormProps) {
       const result = await generateDocument(token, docType, payload);
       setSuccessMessage(`生成しました: ${result.pdf_path ?? result.xlsx_path}`);
       setFields({});
+      onGenerated?.(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成に失敗しました");
     } finally {
