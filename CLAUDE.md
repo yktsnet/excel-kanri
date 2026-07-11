@@ -19,6 +19,8 @@ nix-shell   # Python 仮想環境（.venv）に requirements.txt を自動イン
 npm install
 ```
 
+Python 系コマンドは毎回 `nix-shell --run '<コマンド>'` で実行する。Bash ツールは呼び出しごとに新しいシェルになり venv を保持しないため、素の `python3` では ModuleNotFoundError になる。pip を直接叩かない（依存追加は requirements.txt に書き、nix-shell 再入で反映する）。
+
 ### 開発
 ```
 uvicorn app.main:app --reload   # バックエンド（:8000）
@@ -30,7 +32,7 @@ npm run dev                     # フロントエンド（:5173）
 python -m py_compile {.py ファイル}   # Python 構文チェック
 python -m pytest                      # packages/ のユニットテスト
 npm run typecheck                     # TypeScript 型チェック
-npm test                              # フロントエンドテスト
+npm run build                         # フロントエンドビルド（型チェック込み）
 ```
 
 ## アーキテクチャの要点

@@ -13,12 +13,16 @@ Thumbs.db
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
 venv/
 .venv/
 
 # Node / Vite
 node_modules/
 dist/
+tsconfig.tsbuildinfo
+# グローバル gitignore が package-lock.json を除外するため、このリポでは明示的に追跡する（npm ci / Dependabot に必要）
+!package-lock.json
 
 # 生成物・共有フォルダ（実行時に作られる）
 generated/

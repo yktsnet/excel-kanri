@@ -6,7 +6,7 @@ status: draft
 type: cleanup | fix | feat
 対象: {変更・新規作成するファイルをすべて列挙。新規は (新規) を付記}
 内容: {目的と概要のみ}
-確認: python -m py_compile {.py ファイル} / npm run typecheck
+確認: nix-shell --run 'python -m py_compile {.py ファイル}' / nix-shell --run 'python -m pytest' / npm run typecheck
 
 ---
 

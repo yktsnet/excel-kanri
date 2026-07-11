@@ -2,8 +2,8 @@
 FROM node:22-slim AS frontend-builder
 WORKDIR /build
 
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY tsconfig.json vite.config.ts tailwind.config.js postcss.config.js ./
 COPY frontend/ frontend/
