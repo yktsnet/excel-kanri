@@ -29,6 +29,6 @@ type: feat
 
 ### 制約
 
-- Excel のダウンロード導線は作らない、PDF 描画はブラウザネイティブのみ（JUDGE.md 2章）
+- Excel のダウンロード導線は作らない、PDF 描画はブラウザネイティブのみ（docs/design-decisions.md「ファイル処理・Web UIの設計」）
 - `packages/` 配下は変更しない
 - 依存 Issue: 01（app/gotenberg.py）。実ファイル投入の動作確認は Issue 04 の compose 完成後にまとめて行う

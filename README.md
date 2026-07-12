@@ -73,6 +73,8 @@ graph LR
 
 ## Design Decisions
 
+導入判断に効く要点のみ。各判断の全文（何を捨てたか・どの境界で再検討するか）は [docs/design-decisions.md](docs/design-decisions.md) にある。
+
 - **3層構成とドメイン分離**: マンション管理という語彙はテンプレート・マッピング・フォーム定義の中にしか存在せず、流し込み・監視・変換・検索・閲覧の機械部分は完全にドメインフリーだった。将来の別業種転用や切り出しを見据え、境界を最初から構造（`packages/` → `app/` → `examples/`）で表現している
 - **配布形態は clone リファレンス**: PyPI へのパッケージ公開は行わない。レジストリ公開には versioning・後方互換・英語ドキュメントの継続コストが伴うため、汎用化のコストは実際に利用者が現れてから払う方針とした
 - **デモは同梱物で完結させる**: 配布形態が clone リファレンスである以上、デモの受け手は開発者（と将来の自分）。モジュール単位は VHS の `.tape` 同梱 + GIF、アプリ全体は `docker compose up` 一発起動で、リポ単体で評価できる状態を保つ。常設デモ URL はこれを前提にした補助とする
@@ -81,48 +83,11 @@ graph LR
 
 ## Usage
 
-### Web App
+Web App の API・環境変数・`packages/` の CLI 単体利用は [docs/usage.md](docs/usage.md) にある。概要だけ示す:
 
-| 操作 | ロール | エンドポイント |
-|---|---|---|
-| ログイン | - | `POST /api/auth/login` |
-| 書類種別一覧 | viewer / editor | `GET /api/documents/types` |
-| 書類生成（xlsx + pdf） | editor のみ | `POST /api/generate` |
-| ファイル一覧（generated + shared） | viewer / editor | `GET /api/files` |
-| PDF 配信 | viewer / editor | `GET /api/pdf/{path}` |
-| 全文検索（ルートAのみ対象） | viewer / editor | `GET /api/search?q=...` |
-
-ルートBは Web UI からの操作を必要としない。`shared/` に Excel を配置・保存すると自動で PDF が更新され、上記の一覧・検索 API に反映される（検索はルートA生成物のみが対象）。
-
-主要な環境変数（詳細は [`.env.example`](.env.example) 参照）:
-
-| 変数 | 用途 |
-|---|---|
-| `DEMO_MODE` | `true` でデモ用ログイン画面・シードデータを有効化 |
-| `GOTENBERG_URL` | xlsx → pdf 変換を委譲する Gotenberg コンテナの URL |
-| `JWT_SECRET` | JWT 署名鍵。本番では `openssl rand -hex 32` 等で生成した値に差し替える |
-| `MAPPING_DIR` / `GENERATED_DIR` / `SHARED_DIR` | マッピング YAML・生成物・共有フォルダの配置先 |
-| `GEMINI_API_KEY` | 自然言語検索（post-MVP、未実装）用 |
-
-### Package CLIs (`packages/`)
-
-`packages/` 配下の各モジュールは `app/` に依存せず、単体の CLI としても動く。
-
-**`template_fill`** — マッピング YAML + データ JSON から xlsx を生成する。
-
-```bash
-python -m packages.template_fill mapping.yaml data.json -o out.xlsx
-```
-
-![template_fill demo](packages/template_fill/demo.gif)
-
-**`watch_convert`** — ディレクトリを監視し、ファイルが静定するたびにコマンドを実行する。
-
-```bash
-python -m packages.watch_convert shared/ --exec 'echo converted: {src}'
-```
-
-![watch_convert demo](packages/watch_convert/demo.gif)
+- **ルートA**: `POST /api/generate`（editor 限定）で書類を生成し、`GET /api/files` / `GET /api/pdf/{path}` / `GET /api/search` で閲覧・検索する
+- **ルートB**: `shared/` への配置・保存が自動で PDF に反映される（Web UI 操作不要）
+- **CLI**: `python -m packages.template_fill` / `python -m packages.watch_convert` で `app/` 抜きに単体利用できる
 
 ## Scope
 
