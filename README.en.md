@@ -89,6 +89,10 @@ The Web App's API, environment variables, and standalone use of the `packages/` 
 - **Route B**: saving into `shared/` is reflected automatically as a PDF (no web UI interaction needed)
 - **CLI**: `python -m packages.template_fill` / `python -m packages.watch_convert` work standalone, without `app/`
 
+Standalone demo of `watch_convert` (directory watching → command execution once a file settles):
+
+![watch_convert demo](packages/watch_convert/demo.gif)
+
 ## Scope
 
 ### Focus

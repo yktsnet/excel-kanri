@@ -89,6 +89,10 @@ Web App の API・環境変数・`packages/` の CLI 単体利用は [docs/usage
 - **ルートB**: `shared/` への配置・保存が自動で PDF に反映される（Web UI 操作不要）
 - **CLI**: `python -m packages.template_fill` / `python -m packages.watch_convert` で `app/` 抜きに単体利用できる
 
+`watch_convert` の単体デモ（ディレクトリ監視 → ファイル静定でコマンド実行）:
+
+![watch_convert demo](packages/watch_convert/demo.gif)
+
 ## Scope
 
 ### Focus
