@@ -1,6 +1,6 @@
-# 保証台帳
+# Guarantee Ledger
 
-## 保証
+## Guarantees
 
 ### 1. `tests/template_fill/test_fill.py` — `packages/template_fill/fill.py`（`fill_template`）
 
@@ -79,19 +79,6 @@
 | `--suffix` / `--debounce` を `watching` に転送し、`KeyboardInterrupt` で `0` | `test_main_forwards_suffix_and_debounce_and_stops_on_interrupt` |
 | 変換関数がパスを相対化し `{src}` を置換してコマンド実行 | `test_convert_relativizes_path_and_runs_command` |
 
-## この台帳について
+## About
 
-このリポの「契約面」（外部から観測可能な振る舞い）のうち、テストによって固定されている保証を一覧にする。地位は design-decisions 相当のドキュメントと同格であり、実装が本台帳と食い違う場合は不整合として指摘対象になる。
-
-### 対象範囲
-
-- `packages/` 配下の公開関数・例外（`fill_template` / `load_mapping` / `CellRef` / `is_target` / `PendingQueue` / `watching` とその送出例外）。`packages/` は「app に依存しない汎用モジュール」であり、`app/` や CLI から呼ばれる契約面として扱う。
-- `packages/template_fill/cli.py` / `packages/watch_convert/cli.py` の `main`（引数パース・終了コード・標準出力/標準エラー）。
-
-### 対象外（内部実装）
-
-- `app/` 配下（FastAPI ルーター・認証・Gotenberg 連携・SQLite FTS5 インデックス）: 未着手（テストが無い）
-- `examples/mansion/` のテンプレート・マッピング・シードの具体的な中身
-- watchdog / openpyxl / PyYAML 等、外部ライブラリ自体の挙動
-
-**ここに載っていない振る舞いは約束ではなく、予告なく変わりうる。**
+対象は `packages/` 配下の公開関数・例外（`fill_template` / `load_mapping` / `CellRef` / `is_target` / `PendingQueue` / `watching` とその送出例外）と各 `cli.py` の `main`。対象外は `app/` 配下（未着手）・`examples/mansion/` の具体的な中身・外部ライブラリ自体の挙動。**ここに載っていない振る舞いは約束ではなく、予告なく変わりうる。** 地位は design-decisions 相当のドキュメントと同格。
