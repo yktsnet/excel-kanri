@@ -20,6 +20,19 @@ def test_is_target(name: str, expected: bool) -> None:
     assert is_target(Path("/shared") / name, (".xlsx",)) is expected
 
 
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        ("form.xlsx", True),
+        ("report.csv", True),
+        ("note.txt", False),
+        ("FORM.CSV", True),
+    ],
+)
+def test_is_target_multiple_suffixes(name: str, expected: bool) -> None:
+    assert is_target(Path("/shared") / name, (".xlsx", ".csv")) is expected
+
+
 class FakeClock:
     def __init__(self) -> None:
         self.value = 0.0
@@ -82,3 +95,18 @@ def test_watching_rejects_non_directory(tmp_path: Path) -> None:
     with pytest.raises(ValueError):
         with watching(tmp_path / "missing", lambda p: None):
             pass
+
+
+def test_watching_respects_poll_interval(tmp_path: Path) -> None:
+    converted: list[Path] = []
+
+    with watching(tmp_path, converted.append, debounce_seconds=0.05, poll_interval=1.0):
+        (tmp_path / "a.xlsx").write_bytes(b"dummy")
+        time.sleep(0.3)  # debounce 完了後だが poll_interval（1.0s）未満
+        assert converted == []
+
+        deadline = time.monotonic() + 5.0
+        while not converted and time.monotonic() < deadline:
+            time.sleep(0.05)
+
+    assert [p.name for p in converted] == ["a.xlsx"]
