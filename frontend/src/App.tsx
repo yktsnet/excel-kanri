@@ -62,7 +62,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-slate-50 p-8">
+    <div className="flex h-screen flex-col bg-slate-50 p-4 md:p-8">
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-600">
           {user.email}（{user.role === "editor" ? "編集者" : "閲覧者"}）としてログイン中
@@ -75,7 +75,7 @@ export default function App() {
         </button>
       </div>
 
-      <div className="mt-8 grid min-h-0 flex-1 grid-cols-[320px_1fr] gap-6">
+      <div className="mt-8 grid min-h-0 flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-6 md:grid-cols-[320px_1fr] md:grid-rows-1">
         <div className="flex min-h-0 flex-col gap-3">
           {user.role === "editor" && (
             <button
@@ -96,7 +96,9 @@ export default function App() {
             />
           </div>
         </div>
-        <PdfPreview file={selectedFile} token={token} />
+        <div className="min-h-0">
+          <PdfPreview file={selectedFile} token={token} />
+        </div>
       </div>
 
       {isGenerateModalOpen && user.role === "editor" && (
