@@ -15,14 +15,14 @@ export default function PdfPreview({ file, token }: PdfPreviewProps) {
 
   if (!file) {
     return (
-      <div className="flex h-full items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-500">
+      <div className="flex h-full min-h-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-500">
         ファイルを選択してください
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col gap-2">
+    <div className="flex h-full min-h-0 flex-col gap-2">
       <div className="flex items-center justify-between">
         <p className="truncate text-sm font-medium text-slate-900">{file.name}</p>
         <button
