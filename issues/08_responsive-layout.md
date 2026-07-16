@@ -2,7 +2,7 @@
 id: 08
 branch-slug: responsive-layout
 github_issue:
-status: draft
+status: open
 type: fix
 対象: frontend/src/App.tsx, frontend/src/components/PdfPreview.tsx
 内容: `App.tsx` のファイル一覧/PDFプレビューの2カラムグリッドが `grid-cols-[320px_1fr]` で固定幅のためレスポンシブ対応しておらず、スマホ幅では右側のPDFプレビュー領域が極端に狭くなり崩れる（`PdfPreview.tsx` の「ファイルを選択してください」というプレースホルダーが1文字ずつ縦積みで折り返される）。viewer・editor 両ロールで同じレイアウトを共有しているため、どちらのロールでも崩れる。狭幅では1カラム縦積みに切り替える。
