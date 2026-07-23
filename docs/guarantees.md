@@ -79,6 +79,31 @@
 | `--suffix` / `--debounce` を `watching` に転送し、`KeyboardInterrupt` で `0` | `test_main_forwards_suffix_and_debounce_and_stops_on_interrupt` |
 | 変換関数がパスを相対化し `{src}` を置換してコマンド実行 | `test_convert_relativizes_path_and_runs_command` |
 
+### 6. `tests/app/test_documents_api.py` — `app/api/generate.py` (`GET /api/documents`)
+
+- `GET /api/documents` は未認証（トークン無し）の場合 `401` を返す
+- 認証済みであれば viewer / editor どちらのロールでも `200` で一覧を取得できる
+- 返すのは `pdf_path IS NOT NULL`（PDF生成済み）の行のみで、PDF未確定の行は含めない
+- 各要素は `id` / `doc_type` / `fields`（`fields_json` をパースした dict）/ `pdf_path` / `created_at` の5キーのみを持つ
+- `created_at` 降順で返す
+
+| 保証（要約） | 対応テスト |
+|---|---|
+| 未認証は `401` | `test_documents_requires_auth` |
+| viewer / editor どちらも取得可能 | `test_documents_allows_both_roles` |
+| PDF生成済み行のみ・5キー構成・`fields` は dict | `test_documents_returns_only_pdf_ready_rows_with_parsed_fields` |
+| `created_at` 降順 | `test_documents_sorted_by_created_at_desc` |
+
+## Gaps
+
+app/ の契約面のうち、テストが無いもの:
+
+- `POST /api/auth/login` — 正しい資格情報でトークン発行、誤りで `401`
+- `GET /api/documents/types` — マッピング YAML から doc_type と `fields` 順を返す
+- `POST /api/generate` — editor 限定（viewer は `403`）、未知の doc_type は `404`
+- `GET /api/search` — FTS5 検索の絞り込み（`pdf_path IS NOT NULL` を含む）
+- `GET /api/files` / `GET /api/pdf/{path}` — 一覧・PDF配信（パストラバーサル拒否を含む）
+
 ## About
 
-対象は `packages/` 配下の公開関数・例外（`fill_template` / `load_mapping` / `CellRef` / `is_target` / `PendingQueue` / `watching` とその送出例外）と各 `cli.py` の `main`。対象外は `app/` 配下（未着手）・`examples/mansion/` の具体的な中身・外部ライブラリ自体の挙動。**ここに載っていない振る舞いは約束ではなく、予告なく変わりうる。** 地位は design-decisions 相当のドキュメントと同格。
+対象は `packages/` 配下の公開関数・例外（`fill_template` / `load_mapping` / `CellRef` / `is_target` / `PendingQueue` / `watching` とその送出例外）・各 `cli.py` の `main`・`app/api/` の HTTP エンドポイント（テスト済みのもの。残りは Gaps 参照）。対象外は `examples/mansion/` の具体的な中身・フロントエンドの見た目（目視確認で担保）・外部ライブラリ自体の挙動。**ここに載っていない振る舞いは約束ではなく、予告なく変わりうる。** 地位は design-decisions 相当のドキュメントと同格。
