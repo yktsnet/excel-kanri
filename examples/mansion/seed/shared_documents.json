@@ -1,0 +1,23 @@
+[
+  {
+    "doc_type": "move-in",
+    "filename": "move-in-shared-sample",
+    "fields": {
+      "applicant_name": "高橋 直樹",
+      "room_number": "208",
+      "move_in_date": "2026-07-01",
+      "phone": "090-9876-5432",
+      "emergency_contact": "高橋 由美（080-8765-4321）"
+    }
+  },
+  {
+    "doc_type": "move-out",
+    "filename": "move-out-shared-sample",
+    "fields": {
+      "resident_name": "伊藤 誠",
+      "room_number": "110",
+      "move_out_date": "2026-07-20",
+      "forwarding_address": "東京都渋谷区代々木二丁目2番2号"
+    }
+  }
+]

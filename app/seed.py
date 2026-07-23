@@ -1,9 +1,12 @@
 """DEMO_MODE 用のシードデータ投入。
 
 - ユーザー: viewer / editor 各1件。
-- 書類: examples/mansion/seed/documents.json から、ルートAの生成パイプライン
+- 書類（ルートA）: examples/mansion/seed/documents.json から、ルートAの生成パイプライン
   （DB記録 → xlsx流し込み → Gotenberg変換 → FTS5インデックス登録）を通して実生成する。
   空の一覧・空の検索結果でデモが始まらないようにするための処理。
+- 書類（ルートB）: examples/mansion/seed/shared_documents.json から、shared_dir に
+  直接 xlsx/pdf を投入する。ルートBはDB記録を持たない（ファイルシステムが正）ため、
+  DB登録はしない。
 
 Gotenberg 未起動等で PDF 変換が失敗しても、xlsx と DB 記録までで処理を続行し、
 アプリの起動自体は止めない（Gotenberg 起動待ちのための短いリトライは行う）。
@@ -32,6 +35,7 @@ DEMO_USERS = [
 ]
 
 SEED_DOCUMENTS_PATH = Path("examples/mansion/seed/documents.json")
+SEED_SHARED_DOCUMENTS_PATH = Path("examples/mansion/seed/shared_documents.json")
 SEED_CREATED_BY = "seed@example.com"
 
 _GOTENBERG_WAIT_TIMEOUT_SECONDS = 15.0
@@ -49,6 +53,7 @@ def seed_demo_data() -> None:
                 (user["email"], hash_password(user["password"]), user["role"]),
             )
     seed_demo_documents()
+    seed_demo_shared_files()
 
 
 def seed_demo_documents() -> None:
@@ -72,6 +77,58 @@ def seed_demo_documents() -> None:
 
     for entry in entries:
         _seed_one_document(entry["doc_type"], entry["fields"])
+
+
+def seed_demo_shared_files() -> None:
+    """ルートB（共有フォルダ）のサンプルを shared_dir に直接投入する。
+
+    shared_dir に既にファイルが1つでもあれば何もしない（再起動での重複投入を防ぐ）。
+    ルートBはDBに記録を持たないため、documents テーブルへの登録は行わない。
+    """
+    shared_dir = Path(settings.shared_dir)
+    shared_dir.mkdir(parents=True, exist_ok=True)
+    if any(shared_dir.iterdir()):
+        return
+
+    if not SEED_SHARED_DOCUMENTS_PATH.is_file():
+        logger.warning("共有フォルダ用シードデータが見つかりません: %s", SEED_SHARED_DOCUMENTS_PATH)
+        return
+
+    entries = json.loads(SEED_SHARED_DOCUMENTS_PATH.read_text(encoding="utf-8"))
+    if not entries:
+        return
+
+    _wait_for_gotenberg()
+
+    for entry in entries:
+        _seed_one_shared_file(entry["doc_type"], entry["filename"], entry["fields"])
+
+
+def _seed_one_shared_file(doc_type: str, filename: str, fields: dict[str, str]) -> None:
+    mapping_path = Path(settings.mapping_dir) / f"{doc_type}.yaml"
+    try:
+        mapping = load_mapping(mapping_path)
+    except MappingError as exc:
+        logger.warning("共有フォルダシード '%s' のマッピング読み込みに失敗しました: %s", filename, exc)
+        return
+
+    shared_dir = Path(settings.shared_dir)
+    xlsx_path = shared_dir / f"{filename}.xlsx"
+    try:
+        fill_template(mapping, fields, xlsx_path)
+    except FillError as exc:
+        logger.warning("共有フォルダシード '%s' の xlsx 生成に失敗しました: %s", filename, exc)
+        return
+
+    pdf_path = shared_dir / f"{filename}.pdf"
+    try:
+        convert_to_pdf(xlsx_path, pdf_path)
+    except GotenbergError as exc:
+        logger.warning(
+            "共有フォルダシード '%s' の PDF 変換に失敗しました（xlsxは保存済み）: %s",
+            filename,
+            exc,
+        )
 
 
 def _wait_for_gotenberg(
