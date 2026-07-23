@@ -33,6 +33,14 @@ class GenerateResponse(BaseModel):
     pdf_path: str | None
 
 
+class DocumentRecord(BaseModel):
+    id: int
+    doc_type: str
+    fields: dict[str, str]
+    pdf_path: str
+    created_at: str
+
+
 @router.get("/documents/types", response_model=list[DocumentType])
 def list_document_types(current_user: User = Depends(get_current_user)) -> list[DocumentType]:
     mapping_dir = Path(settings.mapping_dir)
@@ -47,6 +55,30 @@ def list_document_types(current_user: User = Depends(get_current_user)) -> list[
             ) from exc
         types.append(DocumentType(doc_type=path.stem, fields=list(mapping.fields.keys())))
     return types
+
+
+@router.get("/documents", response_model=list[DocumentRecord])
+def list_documents(current_user: User = Depends(get_current_user)) -> list[DocumentRecord]:
+    with db_session() as conn:
+        rows = conn.execute(
+            """
+            SELECT id, doc_type, fields_json, pdf_path, created_at
+            FROM documents
+            WHERE pdf_path IS NOT NULL
+            ORDER BY created_at DESC
+            """
+        ).fetchall()
+
+    return [
+        DocumentRecord(
+            id=row["id"],
+            doc_type=row["doc_type"],
+            fields=json.loads(row["fields_json"]),
+            pdf_path=row["pdf_path"],
+            created_at=row["created_at"],
+        )
+        for row in rows
+    ]
 
 
 @router.post("/generate", response_model=GenerateResponse)
