@@ -22,14 +22,14 @@ docker compose up -d --build
 
 - App: http://localhost:8000
 
-Since it starts with `DEMO_MODE=true`, the login screen shows `viewer` / `editor` tabs with demo credentials pre-filled. Log in as `editor` to walk through the whole flow: document generation → list & preview → search.
+Since it starts with `DEMO_MODE=true`, the login screen shows `viewer` / `editor` tabs with demo credentials pre-filled. Log in as `editor` to walk through the whole flow: document generation → list & preview → search. Route B (shared-folder) samples are also seeded on startup, so you can see the `shared` badge entries too.
 
 ## Overview
 
 Let the workplace keep its Excel-based document workflow, while making documents from either of two input routes viewable and searchable as PDFs.
 
-- **Route A (Web UI generation)**: form input → recorded in SQLite → values filled into a template Excel → converted to PDF
-- **Route B (shared-folder watching)**: place or save an Excel file in `shared/` → change detected → PDF auto-updated (overwritten in place)
+- **Route A (Web UI generation)**: form input → recorded in SQLite → values filled into a template Excel → converted to PDF. The listing is a table with columns per document type (name, room number, etc.); the PDF only opens on demand when a row is selected
+- **Route B (shared-folder watching)**: place or save an Excel file in `shared/` → change detected → PDF auto-updated (overwritten in place). It has no DB record, so it appears only in the file list (PDF list), distinguished from Route A's table by a badge
 
 The first application is move-in/move-out paperwork for a property management company, but all domain-specific artifacts (templates, mappings, seed data) live only in `examples/mansion/`. Swap them out and the toolkit transfers to another industry.
 
@@ -85,8 +85,8 @@ Only the essentials for evaluating adoption. The full text of each decision (wha
 
 The Web App's API, environment variables, and standalone use of the `packages/` CLIs are in [docs/usage.en.md](docs/usage.en.md). A brief overview:
 
-- **Route A**: generate documents with `POST /api/generate` (editor only), then view/search via `GET /api/files` / `GET /api/pdf/{path}` / `GET /api/search`
-- **Route B**: saving into `shared/` is reflected automatically as a PDF (no web UI interaction needed)
+- **Route A**: generate documents with `POST /api/generate` (editor only), browse the per-document-type table via `GET /api/documents`, then open a PDF on demand or search via `GET /api/pdf/{path}` / `GET /api/search`
+- **Route B**: saving into `shared/` is reflected automatically as a PDF. It appears only in the `GET /api/files` PDF list (no web UI interaction needed)
 - **CLI**: `python -m packages.template_fill` / `python -m packages.watch_convert` work standalone, without `app/`
 
 Standalone demo of `watch_convert` (directory watching → command execution once a file settles):

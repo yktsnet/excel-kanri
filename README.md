@@ -22,14 +22,14 @@ docker compose up -d --build
 
 - App: http://localhost:8000
 
-`DEMO_MODE=true` で起動するため、ログイン画面に `viewer` / `editor` タブが出てデモ認証情報が自動入力される。`editor` でログイン→書類生成→一覧・プレビュー→検索まで一通り試せる。
+`DEMO_MODE=true` で起動するため、ログイン画面に `viewer` / `editor` タブが出てデモ認証情報が自動入力される。`editor` でログイン→書類生成→一覧・プレビュー→検索まで一通り試せる。ルートB（共有フォルダ）のサンプルもデモ起動時に投入されるため、`shared` バッジの項目もあわせて確認できる。
 
 ## Overview
 
 現場が Excel での帳票運用を続けたまま、2つの入力経路のどちらからでも書類を PDF として一覧・検索できるようにする。
 
-- **ルートA（Web UI 生成）**: フォーム入力 → SQLite 記録 → テンプレート Excel に流し込み → PDF 変換
-- **ルートB（共有フォルダ監視）**: `shared/` への Excel 配置・保存 → 変更検知 → PDF 自動更新（同名上書き）
+- **ルートA（Web UI 生成）**: フォーム入力 → SQLite 記録 → テンプレート Excel に流し込み → PDF 変換。一覧は氏名・部屋番号等を書類種別ごとの列で並べた表ビューで、PDFは行を選んだときだけオンデマンドで開く
+- **ルートB（共有フォルダ監視）**: `shared/` への Excel 配置・保存 → 変更検知 → PDF 自動更新（同名上書き）。DB記録を持たないためファイル一覧（PDF一覧）側にのみ現れ、ルートAの表とはバッジで区別する
 
 最初の適用例はマンション管理会社の入居・退去手続きだが、ドメイン固有の実装（テンプレート・マッピング・シードデータ）は `examples/mansion/` にのみ置かれており、それらを差し替えるだけで別業種に転用できる構造になっている。
 
@@ -85,8 +85,8 @@ graph LR
 
 Web App の API・環境変数・`packages/` の CLI 単体利用は [docs/usage.md](docs/usage.md) にある。概要だけ示す:
 
-- **ルートA**: `POST /api/generate`（editor 限定）で書類を生成し、`GET /api/files` / `GET /api/pdf/{path}` / `GET /api/search` で閲覧・検索する
-- **ルートB**: `shared/` への配置・保存が自動で PDF に反映される（Web UI 操作不要）
+- **ルートA**: `POST /api/generate`（editor 限定）で書類を生成し、`GET /api/documents` で書類種別ごとの表ビューを表示、`GET /api/pdf/{path}` / `GET /api/search` でPDFのオンデマンド表示・検索を行う
+- **ルートB**: `shared/` への配置・保存が自動で PDF に反映される。`GET /api/files` のPDF一覧側にのみ現れる（Web UI 操作不要）
 - **CLI**: `python -m packages.template_fill` / `python -m packages.watch_convert` で `app/` 抜きに単体利用できる
 
 `watch_convert` の単体デモ（ディレクトリ監視 → ファイル静定でコマンド実行）:

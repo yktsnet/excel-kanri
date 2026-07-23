@@ -11,6 +11,7 @@ The Web App's API list, environment variables, and standalone use of the CLIs un
 | Login | - | `POST /api/auth/login` |
 | List document types | viewer / editor | `GET /api/documents/types` |
 | Generate document (xlsx + pdf) | editor only | `POST /api/generate` |
+| Route A structured list (for the table view; PDF-ready only) | viewer / editor | `GET /api/documents` |
 | List files (generated + shared) | viewer / editor | `GET /api/files` |
 | Serve PDF | viewer / editor | `GET /api/pdf/{path}` |
 | Full-text search (Route A only) | viewer / editor | `GET /api/search?q=...` |
