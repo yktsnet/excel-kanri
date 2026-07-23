@@ -1,8 +1,8 @@
 ## ルートA一覧を構造化データの表ビューにし、PDFはオンデマンド表示にする
 id: 10
 branch-slug: document-table-view
-github_issue:
-status: open
+github_issue: 38
+status: close
 type: feat
 対象:
   - frontend/src/api/documents.ts
