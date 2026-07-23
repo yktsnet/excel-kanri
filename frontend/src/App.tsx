@@ -4,6 +4,7 @@ import GenerateModal from "./components/GenerateModal";
 import FileList from "./components/FileList";
 import PdfPreview from "./components/PdfPreview";
 import SearchBar from "./components/SearchBar";
+import DocumentTable from "./components/DocumentTable";
 import { CurrentUser, fetchCurrentUser } from "./api/auth";
 import { FileEntry } from "./api/files";
 import { GenerateResult } from "./api/documents";
@@ -97,7 +98,11 @@ export default function App() {
           </div>
         </div>
         <div className="min-h-0">
-          <PdfPreview file={selectedFile} token={token} />
+          {selectedFile === null ? (
+            <DocumentTable token={token} onSelect={setSelectedFile} refreshSignal={refreshSignal} />
+          ) : (
+            <PdfPreview file={selectedFile} token={token} onBack={() => setSelectedFile(null)} />
+          )}
         </div>
       </div>
 

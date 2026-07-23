@@ -3,6 +3,14 @@ export interface DocumentType {
   fields: string[];
 }
 
+export interface DocumentRecord {
+  id: number;
+  doc_type: string;
+  fields: Record<string, string>;
+  pdf_path: string;
+  created_at: string;
+}
+
 export interface GenerateResult {
   id: number;
   doc_type: string;
@@ -22,6 +30,12 @@ export function fetchDocumentTypes(token: string): Promise<DocumentType[]> {
   return fetch("/api/documents/types", {
     headers: { Authorization: `Bearer ${token}` },
   }).then((res) => parseOrThrow<DocumentType[]>(res));
+}
+
+export function fetchDocuments(token: string): Promise<DocumentRecord[]> {
+  return fetch("/api/documents", {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((res) => parseOrThrow<DocumentRecord[]>(res));
 }
 
 export function generateDocument(

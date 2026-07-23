@@ -4,9 +4,10 @@ import { FileEntry, pdfUrl } from "../api/files";
 interface PdfPreviewProps {
   file: FileEntry | null;
   token: string;
+  onBack?: () => void;
 }
 
-export default function PdfPreview({ file, token }: PdfPreviewProps) {
+export default function PdfPreview({ file, token, onBack }: PdfPreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   function handlePrint() {
@@ -23,12 +24,23 @@ export default function PdfPreview({ file, token }: PdfPreviewProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <p className="truncate text-sm font-medium text-slate-900">{file.name}</p>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              ← 一覧に戻る
+            </button>
+          )}
+          <p className="truncate text-sm font-medium text-slate-900">{file.name}</p>
+        </div>
         <button
           type="button"
           onClick={handlePrint}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
         >
           印刷
         </button>
