@@ -1,8 +1,8 @@
 ## ルートAの構造化書類一覧APIを追加する
 id: 09
 branch-slug: documents-api
-github_issue:
-status: open
+github_issue: 36
+status: close
 type: feat
 対象: app/api/generate.py
 内容: `fields_json` はすでに構造化データとして保存済みだが、現状これを構造化したまま返すAPIが無く、フロントエンドはPDFを開かないと氏名・部屋番号等の中身を確認できない。ルートA(Web生成)の書類を doc_type・フィールド・PDFパスつきで一覧取得できる `GET /api/documents` を追加し、後続のテーブルビュー実装(Issue 10)の土台にする。
