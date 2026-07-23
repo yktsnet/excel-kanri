@@ -11,12 +11,19 @@ interface FileListProps {
 
 const SOURCE_LABEL: Record<FileEntry["source"], string> = {
   generated: "生成",
-  shared: "共有",
+  shared: "⚠ 共有フォルダ",
 };
 
+// shared(ルートB。テーブルに現れない共有フォルダ由来)は amber の強調色で目立たせ、
+// generated(ルートA。テーブルにも現れる)は slate の落ち着いた色にする。
 const SOURCE_BADGE_CLASS: Record<FileEntry["source"], string> = {
-  generated: "bg-emerald-100 text-emerald-800",
-  shared: "bg-amber-100 text-amber-800",
+  generated: "bg-slate-100 text-slate-700",
+  shared: "bg-amber-500 text-white font-semibold",
+};
+
+const SOURCE_ROW_CLASS: Record<FileEntry["source"], string> = {
+  generated: "",
+  shared: "bg-amber-50/60",
 };
 
 export default function FileList({ token, selectedPath, onSelect, refreshSignal }: FileListProps) {
@@ -45,6 +52,7 @@ export default function FileList({ token, selectedPath, onSelect, refreshSignal 
                 onClick={() => onSelect(file)}
                 className={cn(
                   "flex w-full flex-col gap-1 px-4 py-3 text-left hover:bg-slate-50",
+                  SOURCE_ROW_CLASS[file.source],
                   selectedPath === file.path && "bg-slate-100"
                 )}
               >
