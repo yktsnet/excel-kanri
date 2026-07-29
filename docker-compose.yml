@@ -1,6 +1,7 @@
 services:
   app:
     build: .
+    restart: unless-stopped
     ports:
       - "${HOST_PORT:-8000}:8000"
     environment:
@@ -15,3 +16,4 @@ services:
 
   gotenberg:
     image: gotenberg/gotenberg:8
+    restart: unless-stopped
