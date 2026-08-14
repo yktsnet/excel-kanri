@@ -35,24 +35,21 @@ docker compose up -d --build
 
 ## Architecture
 
+PDF 生成の入口は2つある。Web UI から作る経路と、共有フォルダに置いたファイルを拾う経路。どちらも Gotenberg で合流し、同じ出力に落ちる。
+
 ```mermaid
-graph LR
-    subgraph routeA["ルートA: Web UI 生成"]
-        UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
-        API -->|"記録"| DB[("SQLite + FTS5")]
-        API -->|"openpyxl"| XLSX[".xlsx"]
-    end
-
-    subgraph routeB["ルートB: 共有フォルダ監視"]
-        SHARED["shared/ への配置・保存"] -->|"watchdog 検知"| WATCH["watch_convert"]
-    end
-
-    XLSX --> GB["Gotenberg"]
+flowchart TD
+    UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
+    SHARED[/"shared/ に配置"/] -->|"watchdog"| WATCH["watch_convert"]
+    API --> XLSX[".xlsx"]
+    API --> DB[("SQLite + FTS5")]
+    XLSX --> GB{{"Gotenberg"}}
     WATCH --> GB
-    GB --> PDF["generated/ or shared/ の .pdf"]
-
-    PDF -->|"GET /api/files, /api/pdf, /api/search"| UI
+    GB --> PDF[".pdf"]
+    PDF -.->|"閲覧・検索"| UI
 ```
+
+生成物は `generated/`（Web UI 経由）または `shared/`（監視経由）に置かれ、`GET /api/files` / `/api/pdf` / `/api/search` から参照する。`.xlsx` の書き出しは openpyxl。
 
 3層構成で、下から上への一方向依存を持つ。
 

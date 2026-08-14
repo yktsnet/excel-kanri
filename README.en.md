@@ -35,24 +35,21 @@ The first application is move-in/move-out paperwork for a property management co
 
 ## Architecture
 
+There are two entry points into PDF generation: creating a document from the web UI, and picking up a file dropped into the shared folder. Both converge on Gotenberg and land in the same output.
+
 ```mermaid
-graph LR
-    subgraph routeA["Route A: Web UI generation"]
-        UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
-        API -->|"record"| DB[("SQLite + FTS5")]
-        API -->|"openpyxl"| XLSX[".xlsx"]
-    end
-
-    subgraph routeB["Route B: shared-folder watching"]
-        SHARED["save into shared/"] -->|"watchdog detects"| WATCH["watch_convert"]
-    end
-
-    XLSX --> GB["Gotenberg"]
+flowchart TD
+    UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
+    SHARED[/"drop into shared/"/] -->|"watchdog"| WATCH["watch_convert"]
+    API --> XLSX[".xlsx"]
+    API --> DB[("SQLite + FTS5")]
+    XLSX --> GB{{"Gotenberg"}}
     WATCH --> GB
-    GB --> PDF[".pdf in generated/ or shared/"]
-
-    PDF -->|"GET /api/files, /api/pdf, /api/search"| UI
+    GB --> PDF[".pdf"]
+    PDF -.->|"browse & search"| UI
 ```
+
+Output lands in `generated/` (via the web UI) or `shared/` (via the watcher), and is served through `GET /api/files` / `/api/pdf` / `/api/search`. The `.xlsx` writer is openpyxl.
 
 Three layers with one-way, bottom-up dependencies.
 
