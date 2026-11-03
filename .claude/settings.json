@@ -6,7 +6,6 @@
       "Bash(python -m pytest *)"
     ],
     "deny": [
-      "Bash(ssh *)"
     ]
   }
 }
