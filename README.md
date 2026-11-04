@@ -39,13 +39,13 @@ PDF 生成の入口は2つある。Web UI から作る経路と、共有フォ�
 
 ```mermaid
 flowchart TD
-    UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
-    SHARED[/"shared/ に配置"/] -->|"watchdog"| WATCH["watch_convert"]
-    API --> XLSX[".xlsx"]
-    API --> DB[("SQLite + FTS5")]
-    XLSX --> GB{{"Gotenberg"}}
+    UI["🖥️ React UI"] -->|"POST /api/generate"| API["🌐 FastAPI"]
+    SHARED[/"📂 shared/ に配置"/] -->|"watchdog"| WATCH["👀 watch_convert"]
+    API --> XLSX["📊 .xlsx"]
+    API --> DB[("🗄️ SQLite + FTS5")]
+    XLSX --> GB{{"🔄 Gotenberg"}}
     WATCH --> GB
-    GB --> PDF[".pdf"]
+    GB --> PDF["📄 .pdf"]
     PDF -.->|"閲覧・検索"| UI
 ```
 

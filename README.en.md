@@ -39,13 +39,13 @@ There are two entry points into PDF generation: creating a document from the web
 
 ```mermaid
 flowchart TD
-    UI["React UI"] -->|"POST /api/generate"| API["FastAPI"]
-    SHARED[/"drop into shared/"/] -->|"watchdog"| WATCH["watch_convert"]
-    API --> XLSX[".xlsx"]
-    API --> DB[("SQLite + FTS5")]
-    XLSX --> GB{{"Gotenberg"}}
+    UI["🖥️ React UI"] -->|"POST /api/generate"| API["🌐 FastAPI"]
+    SHARED[/"📂 drop into shared/"/] -->|"watchdog"| WATCH["👀 watch_convert"]
+    API --> XLSX["📊 .xlsx"]
+    API --> DB[("🗄️ SQLite + FTS5")]
+    XLSX --> GB{{"🔄 Gotenberg"}}
     WATCH --> GB
-    GB --> PDF[".pdf"]
+    GB --> PDF["📄 .pdf"]
     PDF -.->|"browse & search"| UI
 ```
 
