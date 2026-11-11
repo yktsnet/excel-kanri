@@ -72,6 +72,21 @@ def test_watching_converts_new_file(tmp_path: Path) -> None:
     assert [p.name for p in converted] == ["a.xlsx"]
 
 
+def test_watching_converts_resaved_existing_file(tmp_path: Path) -> None:
+    target = tmp_path / "a.xlsx"
+    target.write_bytes(b"before")
+    converted: list[Path] = []
+
+    with watching(tmp_path, converted.append, debounce_seconds=0.2, poll_interval=0.05):
+        time.sleep(0.3)
+        target.write_bytes(b"after")
+        deadline = time.monotonic() + 5.0
+        while not converted and time.monotonic() < deadline:
+            time.sleep(0.05)
+
+    assert [p.name for p in converted] == ["a.xlsx"]
+
+
 def test_watching_survives_converter_error(tmp_path: Path) -> None:
     converted: list[Path] = []
 
