@@ -19,5 +19,5 @@
 | [cli-template-fill](cli-template-fill.md) |
 | [watcher](watcher.md) |
 | [cli-watch-convert](cli-watch-convert.md) |
-| [api-documents](api-documents.md) |
+| [api](api.md) |
 
