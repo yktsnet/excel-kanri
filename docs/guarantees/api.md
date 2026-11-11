@@ -1,4 +1,4 @@
-# api-documents
+# api
 
 ## 書類の一覧と種別
 
