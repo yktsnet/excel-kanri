@@ -21,14 +21,3 @@
 | [cli-watch-convert](cli-watch-convert.md) |
 | [api-documents](api-documents.md) |
 
-## Gaps
-
-- `packages.template_fill` の CLI の `main` が、`MappingError`・`OSError`・`json.JSONDecodeError` を `"error: {メッセージ}"` として標準エラーに出し `2` を返すことが未保証（テストは `FillError` だけを確かめている）
-- `packages.watch_convert` の CLI の `main` の既定値（`--suffix` が `(".xlsx",)`、`--debounce` が `1.0`）が未保証
-- `packages.watch_convert` の CLI の変換関数が、カレントディレクトリ基準の相対パスにできない対象パスをどう渡すかが未保証
-- `watching` が既にあるファイルを保存し直したときに `on_convert` を呼ぶことが未保証（テストは新しく作ったファイルだけを確かめている）
-- `POST /api/auth/login` が正しい資格情報でトークンを発行し、誤りで `401` を返すことが未保証
-- `GET /api/documents/types` がマッピング YAML から doc_type と `fields` の順を返すことが未保証
-- `POST /api/generate` が editor 限定であること（viewer は `403`）と、未知の doc_type に `404` を返すことが未保証
-- `GET /api/search` の FTS5 検索の絞り込み（`pdf_path IS NOT NULL` を含む）が未保証
-- `GET /api/files` / `GET /api/pdf/{path}` の一覧と PDF の配信（パストラバーサルの拒否を含む）が未保証

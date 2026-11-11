@@ -69,3 +69,22 @@ def test_convert_relativizes_path_and_runs_command(
     convert(tmp_path / "a.xlsx")
 
     assert calls == [["echo", "a.xlsx"]]
+
+
+def test_main_defaults_suffix_and_debounce(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured: dict[str, object] = {}
+
+    @contextmanager
+    def fake_watching(directory, convert, suffixes, debounce_seconds):
+        captured["suffixes"] = suffixes
+        captured["debounce_seconds"] = debounce_seconds
+        yield threading.Event()
+
+    monkeypatch.setattr(cli_module, "watching", fake_watching)
+    monkeypatch.setattr(cli_module.threading, "Event", _ImmediateInterrupt)
+
+    cli_module.main([str(tmp_path), "--exec", "echo {src}"])
+
+    assert captured == {"suffixes": (".xlsx",), "debounce_seconds": 1.0}

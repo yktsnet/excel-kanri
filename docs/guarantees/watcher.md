@@ -24,6 +24,7 @@
 | 保証 | 対応テスト |
 |---|---|
 | `watching(directory, on_convert, ...)` は、`directory` に対象のファイルが作られると、そのファイルについて `on_convert` を呼ぶ | `test_watching_converts_new_file` |
+| `watching` は、`directory` に既にあるファイルが保存し直されると、そのファイルについて `on_convert` を呼ぶ | `test_watching_converts_resaved_existing_file` |
 | `watching` は、`on_convert` が例外を送出しても監視を続け、ほかのファイルの `on_convert` を呼ぶ | `test_watching_survives_converter_error` |
 | `watching` は、監視するディレクトリが無ければ `ValueError` を送出する | `test_watching_rejects_non_directory` |
 | `watching` は debounce を終えたファイルを `poll_interval` ごとに拾う（debounce を終えた直後ではなく、次の `poll_interval` で `on_convert` を呼ぶ） | `test_watching_respects_poll_interval` |

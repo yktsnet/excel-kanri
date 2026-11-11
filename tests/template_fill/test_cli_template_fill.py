@@ -69,3 +69,59 @@ def test_main_reports_fill_error_and_returns_2(
 
     assert exit_code == 2
     assert capsys.readouterr().err.startswith("error:")
+
+
+def _run_and_capture_error(argv: list[str], capsys: pytest.CaptureFixture[str]) -> tuple[int, str]:
+    exit_code = cli_module.main(argv)
+    return exit_code, capsys.readouterr().err
+
+
+def test_main_reports_mapping_error_and_returns_2(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    mapping = tmp_path / "mapping.yaml"
+    mapping.write_text("fields:\n  name: B3\n", encoding="utf-8")
+    data = tmp_path / "data.json"
+    data.write_text("{}", encoding="utf-8")
+
+    exit_code, err = _run_and_capture_error(
+        [str(mapping), str(data), "-o", str(tmp_path / "o.xlsx")], capsys
+    )
+
+    assert exit_code == 2
+    assert err.startswith("error: 'template' キー")
+
+
+def test_main_reports_os_error_and_returns_2(
+    tmp_path: Path, mapping_file: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    missing = tmp_path / "missing.json"
+    try:
+        missing.read_text(encoding="utf-8")
+    except OSError as exc:
+        expected = f"error: {exc}"
+
+    exit_code, err = _run_and_capture_error(
+        [str(mapping_file), str(missing), "-o", str(tmp_path / "o.xlsx")], capsys
+    )
+
+    assert exit_code == 2
+    assert err.strip() == expected
+
+
+def test_main_reports_json_decode_error_and_returns_2(
+    tmp_path: Path, mapping_file: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    data = tmp_path / "data.json"
+    data.write_text("{not json", encoding="utf-8")
+    try:
+        json.loads("{not json")
+    except json.JSONDecodeError as exc:
+        expected = f"error: {exc}"
+
+    exit_code, err = _run_and_capture_error(
+        [str(mapping_file), str(data), "-o", str(tmp_path / "o.xlsx")], capsys
+    )
+
+    assert exit_code == 2
+    assert err.strip() == expected
